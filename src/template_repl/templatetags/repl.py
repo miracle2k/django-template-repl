@@ -27,3 +27,17 @@ def repl(parser, token):
         else:
             raise TemplateSyntaxError('The second argument to the "repl" tag, if present, must be "pdb".')
     return REPLNode(use_pdb)
+
+
+try:
+    from coffin.template import Library as CoffinLibrary
+    import coffin.common
+except ImportError:
+    pass
+else:
+    # We could simply create a Coffin library in the first place,
+    # of course, but this allows us to more easily maintain this
+    # change as a fork.
+    from template_repl.jinja2_ext import REPLExtension
+    register = CoffinLibrary.from_django(register)
+    register.tag(REPLExtension)
